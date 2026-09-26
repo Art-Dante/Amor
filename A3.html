@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>A3 - Montaje</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    background: #f3c6d4;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+}
+
+#escena {
+
+    position: relative;
+
+    width: 100%;
+    height: 100vh;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #f9dce5 0%,
+            #f3c6d4 45%,
+            #e7aabd 100%
+        );
+
+    color: #633344;
+}
+
+.borde {
+
+    position: absolute;
+
+    left: 0;
+
+    width: 100%;
+    height: 32px;
+
+    background: #8f3f5c;
+
+    z-index: 50;
+}
+
+.borde.superior {
+    top: 0;
+}
+
+.borde.inferior {
+    bottom: 0;
+}
+
+#grano {
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    z-index: 45;
+
+    opacity: 0.045;
+
+    background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+}
+
+#selector {
+
+    position: absolute;
+
+    top: 55px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 90%;
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 12px;
+
+    z-index: 30;
+}
+
+.escenaBoton {
+
+    width: 42px;
+    height: 42px;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(184, 92, 122, 0.35);
+
+    background: rgba(255,255,255,0.18);
+
+    color: rgba(99,51,68,0.45);
+
+    font-family: Georgia, serif;
+
+    cursor: default;
+
+    transition:
+        0.4s ease;
+
+    position: relative;
+}
+
+.escenaBoton.bloqueada {
+
+    opacity: 0.3;
+
+}
+
+.escenaBoton.disponible {
+
+    opacity: 1;
+
+    color: #8f3f5c;
+
+    border-color: #b85c7a;
+
+    background: rgba(255,255,255,0.35);
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0 15px rgba(184,92,122,0.15);
+}
+
+.escenaBoton.disponible:hover {
+
+    background: #b85c7a;
+
+    color: white;
+
+    transform: scale(1.08);
+
+    box-shadow:
+        0 0 20px rgba(184,92,122,0.35);
+}
+
+.escenaBoton.completada {
+
+    opacity: 0.8;
+
+    background: rgba(184,92,122,0.25);
+
+    color: #8f3f5c;
+
+    border-color: rgba(184,92,122,0.5);
+
+}
+
+#contenido {
+
+    position: absolute;
+
+    top: 115px;
+    bottom: 55px;
+
+    left: 5%;
+    right: 5%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+}
+
+.escenaContenido {
+
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 50px;
+
+    opacity: 0;
+
+    transform: translateY(20px);
+
+    transition:
+        opacity 1s ease,
+        transform 1s ease;
+}
+
+.escenaContenido.activa {
+
+    display: flex;
+
+    opacity: 1;
+
+    transform: translateY(0);
+}
+
+.info {
+
+    width: 38%;
+
+    max-width: 430px;
+
+    text-align: left;
+}
+
+.numero {
+
+    font-family: Arial, sans-serif;
+
+    font-size: 11px;
+
+    letter-spacing: 5px;
+
+    color: #a85b77;
+
+    margin-bottom: 18px;
+}
+
+.linea {
+
+    width: 60px;
+
+    height: 1px;
+
+    background: #b85c7a;
+
+    margin-bottom: 25px;
+}
+
+.texto {
+
+    font-size: clamp(19px, 2.4vw, 31px);
+
+    line-height: 1.6;
+
+    letter-spacing: 0.5px;
+
+    min-height: 150px;
+
+    margin: 0;
+
+    color: #633344;
+}
+
+.cursor {
+
+    display: inline-block;
+
+    width: 2px;
+
+    height: 1em;
+
+    background: #b85c7a;
+
+    margin-left: 4px;
+
+    vertical-align: middle;
+
+    animation:
+        parpadeo 0.8s infinite;
+}
+
+@keyframes parpadeo {
+
+    0%, 50% {
+        opacity: 1;
+    }
+
+    51%, 100% {
+        opacity: 0;
+    }
+
+}
+
+.media {
+
+    width: 58%;
+    max-width: 750px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+}
+
+.galeria {
+
+    width: 100%;
+
+    display: grid;
+
+    gap: 12px;
+
+    opacity: 0;
+
+    transform: scale(0.96);
+
+    transition:
+        opacity 1s ease,
+        transform 1s ease;
+}
+
+.galeria.visible {
+
+    opacity: 1;
+
+    transform: scale(1);
+}
+
+.galeria.tres {
+
+    grid-template-columns:
+        repeat(3, 1fr);
+}
+
+.galeria.dos {
+
+    grid-template-columns:
+        repeat(2, 1fr);
+}
+
+.galeria.diez {
+
+    grid-template-columns:
+        repeat(5, 1fr);
+
+    gap: 8px;
+}
+
+.galeria img {
+
+    width: 100%;
+
+    height: 220px;
+
+    object-fit: cover;
+
+    display: block;
+
+    box-shadow:
+        0 15px 35px rgba(120,45,75,0.30);
+
+    border: 2px solid rgba(255,255,255,0.65);
+
+    opacity: 0;
+
+    transform: scale(0.9);
+
+    animation:
+        aparecerFoto 0.8s ease forwards;
+}
+
+.galeria.diez img {
+
+    height: 120px;
+}
+
+.galeria.una {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+.galeria.una img {
+
+    width: 80%;
+
+    max-width: 600px;
+
+    height: 400px;
+
+    object-fit: cover;
+}
+
+
+/* =========================================
+   FOTO VERTICAL A3_5_1
+   SE MUESTRA COMPLETA
+========================================= */
+
+.galeria.una img.imagenVertical {
+
+    width: auto !important;
+
+    height: 60vh !important;
+
+    max-width: 100%;
+
+    max-height: 60vh;
+
+    object-fit: contain !important;
+
+}
+
+
+@keyframes aparecerFoto {
+
+    to {
+
+        opacity: 1;
+
+        transform: scale(1);
+
+    }
+
+}
+
+.videoContainer {
+
+    width: 85%;
+
+    opacity: 0;
+
+    transform: scale(0.94);
+
+    transition:
+        opacity 1s ease,
+        transform 1s ease;
+}
+
+.videoContainer.visible {
+
+    opacity: 1;
+
+    transform: scale(1);
+}
+
+.videoContainer video {
+
+    width: 100%;
+
+    max-height: 60vh;
+
+    object-fit: contain;
+
+    display: block;
+
+    background: #8f3f5c;
+
+    box-shadow:
+        0 20px 60px rgba(120,45,75,0.35);
+
+    border: 2px solid rgba(255,255,255,0.6);
+}
+
+#continuar {
+
+    position: absolute;
+
+    bottom: 70px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    padding: 12px 38px;
+
+    border: 1px solid #b85c7a;
+
+    background: transparent;
+
+    color: #b85c7a;
+
+    font-family: Georgia, serif;
+
+    font-size: 14px;
+
+    letter-spacing: 3px;
+
+    cursor: pointer;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition:
+        opacity 1.5s ease,
+        background 0.3s ease,
+        color 0.3s ease,
+        box-shadow 0.3s ease;
+
+    z-index: 35;
+}
+
+#continuar.visible {
+
+    opacity: 1;
+
+    pointer-events: auto;
+}
+
+#continuar:hover {
+
+    background: #b85c7a;
+
+    color: white;
+
+    box-shadow:
+        0 0 20px rgba(184,92,122,0.4);
+}
+
+@media (max-width: 850px) {
+
+    #selector {
+
+        gap: 6px;
+    }
+
+    .escenaBoton {
+
+        width: 34px;
+        height: 34px;
+
+        font-size: 12px;
+    }
+
+    .escenaContenido.activa {
+
+        flex-direction: column;
+
+        gap: 20px;
+
+        overflow-y: auto;
+
+        padding: 20px 0 80px;
+    }
+
+    .info,
+    .media {
+
+        width: 95%;
+
+        max-width: none;
+
+        text-align: center;
+    }
+
+    .linea {
+
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .texto {
+
+        min-height: 100px;
+
+        font-size: 20px;
+    }
+
+    .galeria img {
+
+        height: 150px;
+    }
+
+    .galeria.diez {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .galeria.diez img {
+
+        height: 110px;
+    }
+
+    .galeria.una img {
+
+        width: 90%;
+
+        height: 280px;
+    }
+
+
+    /* FOTO VERTICAL EN CELULAR */
+
+    .galeria.una img.imagenVertical {
+
+        width: auto !important;
+
+        height: 55vh !important;
+
+        max-width: 100%;
+
+        max-height: 55vh;
+
+        object-fit: contain !important;
+
+    }
+
+}
+
+#escena.salir {
+
+    animation:
+        desaparecer 1.5s ease forwards;
+
+}
+
+@keyframes desaparecer {
+
+    to {
+
+        opacity: 0;
+
+        transform: scale(1.03);
+
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="escena">
+
+<div class="borde superior"></div>
+<div class="borde inferior"></div>
+
+<div id="selector">
+
+    <button class="escenaBoton disponible" data-escena="1">
+        1
+    </button>
+
+    <button class="escenaBoton bloqueada" data-escena="2">
+        2
+    </button>
+
+    <button class="escenaBoton bloqueada" data-escena="3">
+        3
+    </button>
+
+    <button class="escenaBoton bloqueada" data-escena="4">
+        4
+    </button>
+
+    <button class="escenaBoton bloqueada" data-escena="5">
+        5
+    </button>
+
+    <button class="escenaBoton bloqueada" data-escena="6">
+        6
+    </button>
+
+</div>
+
+<main id="contenido">
+
+    <section
+        class="escenaContenido"
+        id="escena1"
+    >
+
+        <div class="info">
+
+            <div class="numero">
+                ESCENA 01
+            </div>
+
+            <div class="linea"></div>
+
+            <p class="texto"
+               data-texto="Fuimos progresando poco a poco...">
+            </p>
+
+            <span class="cursor"></span>
+
+        </div>
+
+        <div class="media">
+
+            <div class="galeria tres">
+
+                <img src="imgs/A3_1_1.jpeg">
+                <img src="imgs/A3_1_2.jpeg">
+                <img src="imgs/A3_1_3.jpeg">
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section
+        class="escenaContenido"
+        id="escena2"
+    >
+
+        <div class="info">
+
+            <div class="numero">
+                ESCENA 02
+            </div>
+
+            <div class="linea"></div>
+
+            <p class="texto"
+               data-texto="Tú y yo...">
+            </p>
+
+            <span class="cursor"></span>
+
+        </div>
+
+        <div class="media">
+
+            <div class="galeria tres">
+
+                <img src="imgs/A3_2_1.jpeg">
+                <img src="imgs/A3_2_2.jpeg">
+                <img src="imgs/A3_2_3.jpeg">
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section
+        class="escenaContenido"
+        id="escena3"
+    >
+
+        <div class="info">
+
+            <div class="numero">
+                ESCENA 03
+            </div>
+
+            <div class="linea"></div>
+
+            <p class="texto"
+               data-texto="Hasta tenemos un mundo juntos teniendo las cosas que nos gustan y solo nuesto...">
+            </p>
+
+            <span class="cursor"></span>
+
+        </div>
+
+        <div class="media">
+
+            <div class="galeria dos">
+
+                <img src="imgs/A3_3_1.jpeg">
+                <img src="imgs/A3_3_2.jpeg">
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section
+        class="escenaContenido"
+        id="escena4"
+    >
+
+        <div class="info">
+
+            <div class="numero">
+                ESCENA 04
+            </div>
+
+            <div class="linea"></div>
+
+            <p class="texto"
+               data-texto="Muchos lugares donde nos divertimos, hablamos y estuvimos juntos...">
+            </p>
+
+            <span class="cursor"></span>
+
+        </div>
+
+        <div class="media">
+
+            <div class="galeria diez">
+
+                <img src="imgs/A3_4_1.jpeg">
+                <img src="imgs/A3_4_2.jpeg">
+                <img src="imgs/A3_4_3.jpeg">
+                <img src="imgs/A3_4_4.jpeg">
+                <img src="imgs/A3_4_5.jpeg">
+                <img src="imgs/A3_4_6.jpeg">
+                <img src="imgs/A3_4_7.jpeg">
+                <img src="imgs/A3_4_8.jpeg">
+                <img src="imgs/A3_4_9.jpeg">
+                <img src="imgs/A3_4_10.jpeg">
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section
+        class="escenaContenido"
+        id="escena5"
+    >
+
+        <div class="info">
+
+            <div class="numero">
+                ESCENA 05
+            </div>
+
+            <div class="linea"></div>
+
+            <p class="texto"
+               data-texto="Horas que se sentian minutos cuando estaba contigo...">
+            </p>
+
+            <span class="cursor"></span>
+
+        </div>
+
+        <div class="media">
+
+            <div class="galeria una">
+
+                <!-- FOTO VERTICAL: SE MOSTRARÁ COMPLETA -->
+                <img
+                    src="imgs/A3_5_1.jpeg"
+                    class="imagenVertical"
+                    alt="A3 escena 5"
+                >
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section
+        class="escenaContenido"
+        id="escena6"
+    >
+
+        <div class="info">
+
+            <div class="numero">
+                ESCENA 06
+            </div>
+
+            <div class="linea"></div>
+
+            <p class="texto"
+               data-texto="Y todavia queda mucho amor.">
+            </p>
+
+            <span class="cursor"></span>
+
+        </div>
+
+        <div class="media">
+
+            <div class="videoContainer">
+
+                <video
+                    id="videoFinal"
+                    controls
+                    playsinline
+                >
+
+                    <source
+                        src="imgs/A3_6.mp4"
+                        type="video/mp4"
+                    >
+
+                    Tu navegador no puede reproducir este video.
+
+                </video>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<button id="continuar">
+    CONTINUAR
+</button>
+
+<div id="grano"></div>
+
+</div>
+
+<script>
+
+const botones =
+    document.querySelectorAll(".escenaBoton");
+
+const escenas =
+    document.querySelectorAll(".escenaContenido");
+
+const botonContinuar =
+    document.getElementById("continuar");
+
+let escenaActual = 0;
+
+
+const textos = [
+
+    "Fuimos progresando poco a poco...",
+
+    "Tú y yo...",
+
+    "Hasta tenemos un mundo juntos teniendo las cosas que nos gustan y solo nuestro...",
+
+    "Estuvimos en muchos lugares donde nos divertimos, hablamos y estando juntos...",
+
+    "Horas que se sentían minutos contigo...",
+
+    "Y todavía queda mucho, amor."
+
+];
+
+
+function mostrarEscena(numero) {
+
+    escenaActual = numero;
+
+    escenas.forEach(escena => {
+
+        escena.classList.remove("activa");
+
+    });
+
+    botonContinuar.classList.remove("visible");
+
+    const escena =
+        document.getElementById(
+            "escena" + numero
+        );
+
+    escena.classList.add("activa");
+
+    const textoElemento =
+        escena.querySelector(".texto");
+
+    const cursor =
+        escena.querySelector(".cursor");
+
+    textoElemento.textContent = "";
+
+    cursor.style.display =
+        "inline-block";
+
+    const galerias =
+        escena.querySelectorAll(".galeria");
+
+    galerias.forEach(galeria => {
+
+        galeria.classList.remove("visible");
+
+    });
+
+    const videoContainer =
+        escena.querySelector(".videoContainer");
+
+    if (videoContainer) {
+
+        videoContainer.classList.remove(
+            "visible"
+        );
+
+    }
+
+    const fotos =
+        escena.querySelectorAll(
+            ".galeria img"
+        );
+
+    fotos.forEach((foto, index) => {
+
+        foto.style.animation = "none";
+
+        foto.offsetHeight;
+
+        foto.style.animation =
+            `aparecerFoto 0.8s ease ${index * 0.35}s forwards`;
+
+    });
+
+    setTimeout(() => {
+
+        escribirTexto(
+            textos[numero - 1],
+            textoElemento,
+            cursor
+        );
+
+    }, 800);
+
+}
+
+
+function escribirTexto(
+    texto,
+    elemento,
+    cursor
+) {
+
+    let i = 0;
+
+    function escribir() {
+
+        if (i < texto.length) {
+
+            elemento.textContent +=
+                texto.charAt(i);
+
+            i++;
+
+            setTimeout(
+                escribir,
+                55
+            );
+
+        } else {
+
+            cursor.style.display =
+                "none";
+
+            const escena =
+                elemento.closest(
+                    ".escenaContenido"
+                );
+
+            const galeria =
+                escena.querySelector(
+                    ".galeria"
+                );
+
+            if (galeria) {
+
+                setTimeout(() => {
+
+                    galeria.classList.add(
+                        "visible"
+                    );
+
+                }, 300);
+
+            }
+
+            const video =
+                escena.querySelector(
+                    ".videoContainer"
+                );
+
+            if (video) {
+
+                setTimeout(() => {
+
+                    video.classList.add(
+                        "visible"
+                    );
+
+                }, 300);
+
+            }
+
+            setTimeout(() => {
+
+                desbloquearSiguiente();
+
+            }, 1200);
+
+        }
+
+    }
+
+    escribir();
+
+}
+
+
+function desbloquearSiguiente() {
+
+    const botonActual =
+        botones[escenaActual - 1];
+
+    botonActual.classList.remove(
+        "disponible"
+    );
+
+    botonActual.classList.add(
+        "completada"
+    );
+
+    botonActual.style.cursor =
+        "default";
+
+    if (escenaActual < 6) {
+
+        const siguiente =
+            botones[escenaActual];
+
+        siguiente.classList.remove(
+            "bloqueada"
+        );
+
+        siguiente.classList.add(
+            "disponible"
+        );
+
+    } else {
+
+        botonContinuar.classList.add(
+            "visible"
+        );
+
+    }
+
+}
+
+
+botones.forEach((boton, index) => {
+
+    boton.addEventListener(
+        "click",
+        () => {
+
+            const numero =
+                index + 1;
+
+            if (
+                boton.classList.contains(
+                    "disponible"
+                )
+            ) {
+
+                mostrarEscena(numero);
+
+            }
+
+        }
+    );
+
+});
+
+
+botonContinuar.addEventListener(
+    "click",
+    () => {
+
+        const escena =
+            document.getElementById("escena");
+
+        escena.style.opacity = "0";
+
+        escena.style.transition =
+            "opacity 1.5s ease";
+
+        setTimeout(() => {
+
+            window.location.href =
+                "A4.html";
+
+        }, 1500);
+
+    }
+);
+
+
+mostrarEscena(1);
+
+</script>
+
+</body>
+</html>

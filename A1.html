@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>A1 - Inicio</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    /* FONDO ROSA */
+    background: #f3c6d4;
+
+    font-family: Georgia, "Times New Roman", serif;
+}
+
+#escena {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+
+    /* FONDO ROSA */
+    background:
+        radial-gradient(
+            circle at center,
+            #f9dce5 0%,
+            #f3c6d4 45%,
+            #e7aabd 100%
+        );
+
+    overflow: hidden;
+}
+
+#pantallaCine {
+    position: absolute;
+
+    width: 75%;
+    max-width: 1000px;
+    height: 60%;
+
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%) scale(0.85);
+
+    /* ROSA MUY CLARO */
+    background: #fff5f8;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    opacity: 0;
+
+    box-shadow:
+        0 0 40px rgba(190, 80, 120, 0.25),
+        0 0 100px rgba(190, 80, 120, 0.15);
+
+    transition:
+        opacity 2s ease,
+        transform 2s ease;
+
+    z-index: 2;
+}
+
+
+/* Cuando aparece */
+
+#pantallaCine.visible {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+
+#pantallaCine::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 15px;
+
+    border: 1px solid rgba(184, 92, 122, 0.35);
+
+    pointer-events: none;
+}
+
+
+#contenido {
+    text-align: center;
+
+    width: 80%;
+
+    color: #633344;
+}
+
+#textoInicio {
+    font-size: clamp(22px, 3vw, 42px);
+
+    line-height: 1.5;
+
+    letter-spacing: 1px;
+
+    margin: 0;
+
+    min-height: 100px;
+}
+
+
+#cursor {
+    display: inline-block;
+
+    width: 2px;
+    height: 1em;
+
+    /* ROSA */
+    background: #b85c7a;
+
+    margin-left: 4px;
+
+    vertical-align: middle;
+
+    animation: parpadeo 0.8s infinite;
+}
+
+@keyframes parpadeo {
+
+    0%, 50% {
+        opacity: 1;
+    }
+
+    51%, 100% {
+        opacity: 0;
+    }
+
+}
+
+#continuar {
+
+    margin-top: 35px;
+
+    padding: 12px 35px;
+
+    /* BORDE ROSA */
+    border: 1px solid #b85c7a;
+
+    background: transparent;
+
+    color: #b85c7a;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 16px;
+
+    letter-spacing: 2px;
+
+    cursor: pointer;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition:
+        opacity 1.5s ease,
+        background 0.3s ease,
+        color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+#continuar.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#continuar:hover {
+
+    background: #b85c7a;
+
+    color: white;
+
+    box-shadow:
+        0 0 20px rgba(184, 92, 122, 0.45);
+}
+
+.telon {
+
+    position: absolute;
+
+    top: 0;
+
+    width: 51%;
+    height: 100%;
+
+    z-index: 10;
+
+    /* TELÓN ROSA */
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #8f3f5c 0px,
+            #c05c7b 35px,
+            #7d304d 70px,
+            #b94f70 105px,
+            #8a3654 140px
+        );
+
+    box-shadow:
+        inset 0 0 80px rgba(60, 10, 30, 0.65);
+
+    transition:
+        transform 3s cubic-bezier(.77,0,.18,1);
+}
+
+
+/* Telón izquierdo */
+
+#telonIzquierdo {
+    left: 0;
+
+    transform-origin: left center;
+}
+
+
+/* Telón derecho */
+
+#telonDerecho {
+    right: 0;
+
+    transform-origin: right center;
+}
+
+.telon.abiertoIzquierda {
+    transform: translateX(-100%);
+}
+
+.telon.abiertoDerecha {
+    transform: translateX(100%);
+}
+
+.telon::after {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    width: 8px;
+    height: 100%;
+
+    /* DORADO SUAVE */
+    background: linear-gradient(
+        to bottom,
+        #c58b4a,
+        #f4d58b,
+        #a66d2e,
+        #f4d58b,
+        #c58b4a
+    );
+}
+
+#telonIzquierdo::after {
+    right: 0;
+}
+
+#telonDerecho::after {
+    left: 0;
+}
+
+
+#grano {
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 20;
+
+    pointer-events: none;
+
+    opacity: 0.06;
+
+    background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+
+}
+
+@media (max-width: 700px) {
+
+    #pantallaCine {
+        width: 88%;
+        height: 55%;
+    }
+
+    #pantallaCine::before {
+        inset: 10px;
+    }
+
+    #textoInicio {
+        font-size: 22px;
+    }
+
+    #continuar {
+        font-size: 14px;
+        padding: 10px 25px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="escena">
+
+<div id="pantallaCine">
+
+    <div id="contenido">
+
+        <p id="textoInicio"></p>
+
+        <span id="cursor"></span>
+
+        <br>
+
+        <button id="continuar">
+            CONTINUAR
+        </button>
+
+    </div>
+
+</div>
+
+<div id="telonIzquierdo" class="telon"></div>
+
+<div id="telonDerecho" class="telon"></div>
+
+<div id="barraTelon"></div>
+
+<div id="grano"></div>
+
+</div>
+
+<script>
+
+const telonIzquierdo =
+    document.getElementById("telonIzquierdo");
+
+const telonDerecho =
+    document.getElementById("telonDerecho");
+
+const pantallaCine =
+    document.getElementById("pantallaCine");
+
+const textoInicio =
+    document.getElementById("textoInicio");
+
+const cursor =
+    document.getElementById("cursor");
+
+const continuar =
+    document.getElementById("continuar");
+
+const texto =
+    "Toda historia comienza en algún lugar...";
+
+function escribirTexto(texto, velocidad = 70) {
+
+    let i = 0;
+
+    textoInicio.textContent = "";
+
+    function escribir() {
+
+        if (i < texto.length) {
+
+            textoInicio.textContent += texto.charAt(i);
+
+            i++;
+
+            setTimeout(escribir, velocidad);
+
+        } else {
+
+            cursor.style.display = "none";
+
+            setTimeout(() => {
+
+                continuar.classList.add("visible");
+
+            }, 800);
+
+        }
+
+    }
+
+    escribir();
+}
+
+setTimeout(() => {
+
+    /* Abrir telón */
+
+    telonIzquierdo.classList.add("abiertoIzquierda");
+
+    telonDerecho.classList.add("abiertoDerecha");
+
+
+    /* Después aparece la pantalla */
+
+    setTimeout(() => {
+
+        pantallaCine.classList.add("visible");
+
+
+        /* Comienza a escribirse el texto */
+
+        setTimeout(() => {
+
+            escribirTexto(texto);
+
+        }, 1200);
+
+    }, 1800);
+
+}, 5000);
+
+continuar.addEventListener("click", () => {
+
+    window.location.href = "A2.html";
+
+});
+
+</script>
+
+</body>
+</html>

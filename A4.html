@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>A4 — Para ti</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    background: #f3c6d4;
+    color: #633344;
+    font-family: Georgia, "Times New Roman", serif;
+}
+
+
+.pantalla {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #f9dce5 0%,
+            #f3c6d4 55%,
+            #e7aabd 100%
+        );
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+}
+
+.borde-superior,
+.borde-inferior {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 7vh;
+
+    background: #8f3f5c;
+
+    z-index: 20;
+}
+
+.borde-superior {
+    top: 0;
+}
+
+.borde-inferior {
+    bottom: 0;
+}
+
+.grano {
+    position: absolute;
+    inset: 0;
+
+    pointer-events: none;
+    z-index: 15;
+
+    opacity: 0.06;
+
+    background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
+
+    animation: ruido 0.18s infinite;
+}
+
+@keyframes ruido {
+
+    0% {
+        transform: translate(0, 0);
+    }
+
+    25% {
+        transform: translate(2%, -2%);
+    }
+
+    50% {
+        transform: translate(-2%, 2%);
+    }
+
+    75% {
+        transform: translate(2%, 2%);
+    }
+
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+.luz {
+    position: absolute;
+
+    width: 70vw;
+    height: 70vw;
+
+    max-width: 900px;
+    max-height: 900px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.28),
+            transparent 65%
+        );
+
+    filter: blur(30px);
+
+    animation: respiracion 6s ease-in-out infinite;
+}
+
+@keyframes respiracion {
+
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: scale(0.95);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+.carta {
+    position: relative;
+
+    width: min(850px, 82vw);
+    height: min(76vh, 700px);
+
+    padding: 55px 70px;
+
+    background:
+        linear-gradient(
+            rgba(255, 248, 250, 0.98),
+            rgba(250, 226, 235, 0.98)
+        );
+
+    color: #633344;
+
+    border-radius: 5px;
+
+    border: 1px solid rgba(184, 92, 122, 0.25);
+
+    box-shadow:
+        0 0 35px rgba(120, 45, 75, 0.20),
+        0 20px 60px rgba(120, 45, 75, 0.25);
+
+    opacity: 0;
+
+    transform:
+        translateY(35px)
+        scale(0.96);
+
+    animation: aparecerCarta 2s ease forwards;
+
+    overflow: hidden;
+
+    z-index: 5;
+}
+
+@keyframes aparecerCarta {
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+.carta::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 15px;
+
+    border: 1px solid rgba(184, 92, 122, 0.25);
+
+    pointer-events: none;
+}
+
+.carta::after {
+    content: "";
+
+    position: absolute;
+
+    width: 180px;
+    height: 180px;
+
+    right: -70px;
+    bottom: -70px;
+
+    border-radius: 50%;
+
+    background: rgba(184, 92, 122, 0.08);
+
+    pointer-events: none;
+}
+
+.encabezado {
+    position: relative;
+
+    text-align: center;
+
+    margin-bottom: 30px;
+
+    opacity: 0;
+
+    animation: aparecerEncabezado 1.5s ease forwards;
+    animation-delay: 1.4s;
+}
+
+@keyframes aparecerEncabezado {
+
+    to {
+        opacity: 1;
+    }
+}
+
+.encabezado h1 {
+    margin: 0;
+
+    font-size: clamp(25px, 3vw, 38px);
+
+    font-weight: normal;
+
+    letter-spacing: 2px;
+
+    color: #633344;
+}
+
+.linea {
+    width: 90px;
+    height: 1px;
+
+    background: rgba(184, 92, 122, 0.55);
+
+    margin: 15px auto 0;
+}
+
+.contenido-carta {
+    position: relative;
+
+    height: calc(100% - 100px);
+
+    overflow-y: auto;
+
+    padding-right: 10px;
+
+    scrollbar-width: none;
+}
+
+.contenido-carta::-webkit-scrollbar {
+    display: none;
+}
+
+#textoCarta {
+    font-size: clamp(16px, 1.5vw, 20px);
+
+    line-height: 1.8;
+
+    white-space: pre-line;
+
+    text-align: left;
+
+    min-height: 100px;
+}
+
+.cursor {
+    display: inline-block;
+
+    width: 2px;
+    height: 1.1em;
+
+    background: #b85c7a;
+
+    margin-left: 3px;
+
+    vertical-align: middle;
+
+    animation: parpadeo 0.8s infinite;
+}
+
+@keyframes parpadeo {
+
+    0%,
+    50% {
+        opacity: 1;
+    }
+
+    51%,
+    100% {
+        opacity: 0;
+    }
+}
+
+.firma {
+    margin-top: 30px;
+
+    text-align: right;
+
+    font-size: clamp(16px, 1.4vw, 19px);
+
+    font-style: italic;
+
+    color: #8f3f5c;
+
+    opacity: 0;
+
+    transition: opacity 1.5s ease;
+}
+
+.firma.visible {
+    opacity: 1;
+}
+
+#botonContinuar {
+    position: absolute;
+
+    bottom: 9vh;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    padding: 13px 32px;
+
+    border: 1px solid rgba(255, 255, 255, 0.65);
+
+    background: #b85c7a;
+
+    color: white;
+
+    font-family: Arial, sans-serif;
+
+    font-size: 13px;
+
+    letter-spacing: 3px;
+
+    cursor: pointer;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition:
+        opacity 1s ease,
+        background 0.3s ease,
+        transform 0.3s ease;
+
+    z-index: 30;
+
+    box-shadow:
+        0 8px 25px rgba(120, 45, 75, 0.25);
+}
+
+#botonContinuar.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#botonContinuar:hover {
+    background: #8f3f5c;
+
+    transform:
+        translateX(-50%)
+        translateY(-3px);
+}
+
+.transicion {
+    position: fixed;
+
+    inset: 0;
+
+    background: #8f3f5c;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    z-index: 100;
+
+    transition: opacity 1.2s ease;
+}
+
+.transicion.activa {
+    opacity: 1;
+}
+
+@media (max-width: 700px) {
+
+    .borde-superior,
+    .borde-inferior {
+        height: 5vh;
+    }
+
+    .carta {
+        width: 88vw;
+        height: 76vh;
+
+        padding: 40px 35px;
+    }
+
+    .contenido-carta {
+        height: calc(100% - 90px);
+    }
+
+    #textoCarta {
+        font-size: 16px;
+        line-height: 1.7;
+    }
+
+    .firma {
+        font-size: 15px;
+    }
+
+    #botonContinuar {
+        bottom: 6vh;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="pantalla">
+
+    <div class="borde-superior"></div>
+    <div class="borde-inferior"></div>
+
+    <div class="luz"></div>
+
+    <div class="grano"></div>
+
+    <div class="carta">
+
+        <div class="encabezado">
+
+            <h1>Para ti, Mi Solecito.</h1>
+
+            <div class="linea"></div>
+
+        </div>
+
+
+        <div class="contenido-carta">
+
+            <div id="textoCarta"></div>
+
+            <span id="cursor" class="cursor"></span>
+
+            <div id="firma" class="firma">
+                — Arturo
+            </div>
+
+        </div>
+
+    </div>
+
+    <button id="botonContinuar">
+        CONTINUAR
+    </button>
+
+</div>
+
+<div id="transicion" class="transicion"></div>
+
+
+<script>
+
+const texto = `No se como empezar pero eres una chica tan linda, maravillosa e increíble que a veces todavía me parece increible tenerte en mi vida, se que tuvimos muchos altos y bajos pero seguimos juntos, se que la he regado mucho y la seguire regando pero junto a ti y hoy, más que celebrar tu cumpleaños, quiero celebrar el hecho de que existas y que de alguna manera nuestros caminos se hayan encontrado.
+Tu corazón vale más que el oro, de esos que iluminan todo a su alrededor y nunca digas que no eres suficiente o que no tienes nada especial, porque desde mi forma de verte, eres una persona única. Me encanta tu manera de ser, tus gestos, tus ocurrencias, tus silencios y hasta esas pequeñas cosas que para mí pueden significar muchísimo.
+Admiro tu fuerza cuando sigues adelante, tu ternura cuando te permites sentir y esa sonrisa que tiene una facilidad increíble para hacer que mis días sean un poquito mejores.
+Espero que este nuevo año de tu vida te regale momentos bonitos, personas que te quieran sinceramente, muchas razones para sacar esa linda sonrisa tuya y todo aquello que tu corazón merece. Y cuando algún día dudes de ti, quiero que recuerdes que hay alguien que te ve como una persona increíble, especial y completamente irremplazable.
+
+Gracias por existir, por ser tú y por permitirme compartir aunque sea una pequeña parte de tu vida. Ojalá hoy puedas sentir aunque sea un poquito de todo el cariño que mereces.
+
+Feliz cumpleaños. 🫶🏻❤️ Espero que este sea solamente el comienzo de un año lleno de cosas bonitas para ti. Te Amo Muchísimo.
+`;
+
+const textoCarta = document.getElementById("textoCarta");
+const cursor = document.getElementById("cursor");
+const firma = document.getElementById("firma");
+const botonContinuar = document.getElementById("botonContinuar");
+const transicion = document.getElementById("transicion");
+
+let indice = 0;
+
+const velocidadEscritura = 38;
+
+
+function escribirCarta() {
+
+    if (indice < texto.length) {
+
+        textoCarta.textContent += texto.charAt(indice);
+
+        indice++;
+
+        const contenedor =
+            document.querySelector(".contenido-carta");
+
+        contenedor.scrollTop =
+            contenedor.scrollHeight;
+
+        setTimeout(
+            escribirCarta,
+            velocidadEscritura
+        );
+
+    } else {
+
+
+        cursor.style.display = "none";
+
+        setTimeout(() => {
+
+            firma.classList.add("visible");
+
+        }, 500);
+
+        setTimeout(() => {
+
+            botonContinuar.classList.add("visible");
+
+        }, 2500);
+    }
+}
+
+
+setTimeout(() => {
+
+    escribirCarta();
+
+}, 2300);
+
+
+botonContinuar.addEventListener("click", () => {
+
+    transicion.classList.add("activa");
+
+    setTimeout(() => {
+
+        window.location.href = "A5.html";
+
+    }, 1200);
+
+});
+
+</script>
+
+</body>
+</html>

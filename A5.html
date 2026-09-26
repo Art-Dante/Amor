@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Fin</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+
+    width: 100%;
+    height: 100%;
+
+    overflow: hidden;
+}
+
+body {
+    background: #f3c6d4;
+    color: #633344;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+}
+
+.pantalla {
+
+    position: relative;
+
+    width: 100%;
+    height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #f9dce5 0%,
+            #f3c6d4 55%,
+            #e7aabd 100%
+        );
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    overflow: hidden;
+
+    opacity: 0;
+
+    animation: aparecerPantalla 2s ease forwards;
+}
+
+@keyframes aparecerPantalla {
+
+    to {
+        opacity: 1;
+    }
+}
+
+.borde-superior,
+.borde-inferior {
+
+    position: absolute;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 7vh;
+
+    background: #8f3f5c;
+
+    z-index: 20;
+}
+
+.borde-superior {
+    top: 0;
+}
+
+.borde-inferior {
+    bottom: 0;
+}
+
+
+.contenedorTexto {
+
+    position: relative;
+
+    width: 85%;
+
+    max-width: 1000px;
+
+    margin-top: 13vh;
+
+    text-align: center;
+
+    z-index: 5;
+}
+
+#textoPrincipal {
+
+    font-size: clamp(
+        20px,
+        3vw,
+        38px
+    );
+
+    line-height: 1.5;
+
+    letter-spacing: 1px;
+
+    min-height: 100px;
+
+    color: #633344;
+
+    text-shadow:
+        0 0 15px rgba(255,255,255,0.35);
+
+    white-space: pre-line;
+}
+
+.cursor {
+
+    display: inline-block;
+
+    width: 2px;
+
+    height: 1.1em;
+
+    background: #b85c7a;
+
+    margin-left: 4px;
+
+    vertical-align: middle;
+
+    animation:
+        parpadeo 0.8s infinite;
+}
+
+@keyframes parpadeo {
+
+    0%,
+    50% {
+        opacity: 1;
+    }
+
+    51%,
+    100% {
+        opacity: 0;
+    }
+}
+
+
+.contenedorFoto {
+
+    position: relative;
+
+    margin-top: 4vh;
+
+    width: min(500px, 70vw);
+
+    opacity: 0;
+
+    transform:
+        translateY(35px)
+        scale(0.94);
+
+    transition:
+        opacity 2s ease,
+        transform 2s ease;
+
+    z-index: 4;
+}
+
+.contenedorFoto.visible {
+
+    opacity: 1;
+
+    transform:
+        translateY(0)
+        scale(1);
+}
+
+
+.contenedorFoto img {
+
+    display: block;
+
+    width: 100%;
+
+    max-height: 48vh;
+
+    object-fit: contain;
+
+    border-radius: 5px;
+
+    border: 1px solid rgba(255, 255, 255, 0.65);
+
+    box-shadow:
+        0 0 30px rgba(120, 45, 75, 0.20),
+        0 20px 60px rgba(120, 45, 75, 0.30);
+}
+
+.mensajeFinal {
+
+    position: relative;
+
+    margin-top: 2.5vh;
+
+    text-align: center;
+
+    opacity: 0;
+
+    transform: translateY(15px);
+
+    transition:
+        opacity 1.5s ease,
+        transform 1.5s ease;
+
+    z-index: 5;
+}
+
+.mensajeFinal.visible {
+
+    opacity: 1;
+
+    transform: translateY(0);
+}
+
+.feliz {
+
+    font-size: clamp(
+        22px,
+        3vw,
+        34px
+    );
+
+    letter-spacing: 2px;
+
+    margin-bottom: 10px;
+
+    color: #633344;
+
+    text-shadow:
+        0 0 15px rgba(184, 92, 122, 0.20);
+}
+
+
+.tqm {
+
+    font-size: clamp(
+        18px,
+        2vw,
+        25px
+    );
+
+    font-style: italic;
+
+    color: #8f3f5c;
+
+    opacity: 0.95;
+}
+
+
+.fin {
+
+    position: absolute;
+
+    bottom: 9vh;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%)
+        translateY(10px);
+
+    font-family: Arial, sans-serif;
+
+    font-size: 12px;
+
+    letter-spacing: 7px;
+
+    color: rgba(99, 51, 68, 0.65);
+
+    opacity: 0;
+
+    transition:
+        opacity 2s ease,
+        transform 2s ease;
+
+    z-index: 30;
+}
+
+.fin.visible {
+
+    opacity: 1;
+
+    transform:
+        translateX(-50%)
+        translateY(0);
+}
+
+.grano {
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    z-index: 15;
+
+    opacity: 0.05;
+
+    background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
+
+    animation: ruido 0.18s infinite;
+}
+
+@keyframes ruido {
+
+    0% {
+        transform: translate(0,0);
+    }
+
+    25% {
+        transform: translate(2%,-2%);
+    }
+
+    50% {
+        transform: translate(-2%,2%);
+    }
+
+    75% {
+        transform: translate(2%,2%);
+    }
+
+    100% {
+        transform: translate(0,0);
+    }
+}
+
+@media (max-width: 700px) {
+
+    .borde-superior,
+    .borde-inferior {
+
+        height: 5vh;
+    }
+
+    .contenedorTexto {
+
+        margin-top: 12vh;
+
+        width: 88%;
+    }
+
+    #textoPrincipal {
+
+        font-size: 20px;
+    }
+
+    .contenedorFoto {
+
+        width: 78vw;
+
+        margin-top: 3vh;
+    }
+
+    .contenedorFoto img {
+
+        max-height: 42vh;
+    }
+
+    .feliz {
+
+        font-size: 23px;
+    }
+
+    .tqm {
+
+        font-size: 18px;
+    }
+
+    .fin {
+
+        bottom: 7vh;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="pantalla">
+
+    <div class="borde-superior"></div>
+    <div class="borde-inferior"></div>
+
+
+    <div class="contenedorTexto">
+
+        <div id="textoPrincipal"></div>
+
+        <span
+            id="cursor"
+            class="cursor">
+        </span>
+
+    </div>
+
+    <div
+        id="contenedorFoto"
+        class="contenedorFoto">
+
+        <img
+            src="imgs/A5.jpeg"
+            alt="Un recuerdo especial">
+
+    </div>
+
+
+    <div
+        id="mensajeFinal"
+        class="mensajeFinal">
+
+        <div class="feliz">
+            Feliz cumpleaños, Ale ✨
+        </div>
+
+        <div class="tqm">
+            Te Amo Mucho ❤️
+        </div>
+
+    </div>
+
+    <div
+        id="fin"
+        class="fin">
+
+        FIN
+
+    </div>
+
+
+    <!-- GRANO -->
+
+    <div class="grano"></div>
+
+</div>
+
+
+<script>
+
+const texto =
+`Y espero que me sigas dando la oportunidad de estar contigo...
+y llegar la oportunidad de llegar a que se haga relidad ->`;
+
+const textoPrincipal =
+    document.getElementById("textoPrincipal");
+
+const cursor =
+    document.getElementById("cursor");
+
+const contenedorFoto =
+    document.getElementById("contenedorFoto");
+
+const mensajeFinal =
+    document.getElementById("mensajeFinal");
+
+const fin =
+    document.getElementById("fin");
+
+let indice = 0;
+
+const velocidad = 65;
+
+
+function escribirTexto() {
+
+    if (indice < texto.length) {
+
+        textoPrincipal.textContent +=
+            texto.charAt(indice);
+
+        indice++;
+
+        setTimeout(
+            escribirTexto,
+            velocidad
+        );
+
+    } else {
+
+        /* QUITAR CURSOR */
+
+        cursor.style.display = "none";
+
+
+        /*
+        EL TEXTO SE QUEDA EN PANTALLA.
+        ESPERAMOS UN MOMENTO.
+        */
+
+        setTimeout(() => {
+
+            contenedorFoto.classList.add("visible");
+
+        }, 1800);
+
+
+        /*
+        DESPUÉS APARECE
+        EL FELIZ CUMPLEAÑOS
+        */
+
+        setTimeout(() => {
+
+            mensajeFinal.classList.add("visible");
+
+        }, 3800);
+
+
+        /*
+        FINALMENTE APARECE FIN
+        */
+
+        setTimeout(() => {
+
+            fin.classList.add("visible");
+
+        }, 6000);
+
+    }
+}
+
+
+setTimeout(() => {
+
+    escribirTexto();
+
+}, 1800);
+
+</script>
+
+</body>
+</html>

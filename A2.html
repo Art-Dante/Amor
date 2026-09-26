@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>A2 - Primera Escena</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    /* FONDO ROSA */
+    background: #f3c6d4;
+
+    font-family: Georgia, "Times New Roman", serif;
+}
+
+#escena {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+
+    /* MISMO FONDO ROSA QUE A1 */
+    background:
+        radial-gradient(
+            circle at center,
+            #f9dce5 0%,
+            #f3c6d4 45%,
+            #e7aabd 100%
+        );
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+}
+
+#escena::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background:
+        linear-gradient(
+            rgba(255,255,255,0.06),
+            rgba(255,255,255,0.02)
+        );
+
+    pointer-events: none;
+}
+
+#contenido {
+
+    width: 88%;
+    max-width: 1200px;
+
+    min-height: 65%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 70px;
+
+    opacity: 0;
+
+    transform: translateY(30px);
+
+    animation:
+        aparecer 2s ease forwards;
+
+}
+
+
+@keyframes aparecer {
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+#textoContainer {
+
+    width: 50%;
+
+    /* ROSA OSCURO */
+    color: #633344;
+
+    text-align: left;
+
+    padding: 20px;
+}
+
+#escenaNumero {
+
+    font-family: Arial, sans-serif;
+
+    font-size: 12px;
+
+    letter-spacing: 5px;
+
+    color: #a85b77;
+
+    margin-bottom: 25px;
+}
+
+#texto {
+
+    font-size: clamp(22px, 3vw, 38px);
+
+    line-height: 1.6;
+
+    letter-spacing: 1px;
+
+    min-height: 180px;
+
+    margin: 0;
+
+}
+
+#cursor {
+
+    display: inline-block;
+
+    width: 2px;
+
+    height: 1.1em;
+
+    /* ROSA */
+    background: #b85c7a;
+
+    margin-left: 5px;
+
+    vertical-align: middle;
+
+    animation: parpadeo 0.8s infinite;
+}
+
+
+@keyframes parpadeo {
+
+    0%, 50% {
+        opacity: 1;
+    }
+
+    51%, 100% {
+        opacity: 0;
+    }
+
+}
+
+#imagenContainer {
+
+    width: 50%;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    position: relative;
+}
+
+
+/* Marco decorativo */
+
+#imagenContainer::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 92%;
+    height: 92%;
+
+    max-width: 540px;
+
+    border: 1px solid rgba(184, 92, 122, 0.35);
+
+    transform: translate(14px, 14px);
+
+    pointer-events: none;
+}
+
+
+#imagenContainer img {
+
+    width: 100%;
+
+    max-width: 520px;
+
+    max-height: 65vh;
+
+    object-fit: cover;
+
+    display: block;
+
+    opacity: 0;
+
+    transform:
+        scale(0.94)
+        translateY(20px);
+
+    animation:
+        aparecerImagen 2s ease 0.5s forwards;
+
+    /* SOMBRA ROSA */
+    box-shadow:
+        0 20px 60px rgba(120, 45, 75, 0.30);
+
+    position: relative;
+
+    z-index: 2;
+
+}
+
+
+@keyframes aparecerImagen {
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            scale(1)
+            translateY(0);
+
+    }
+
+}
+
+#continuar {
+
+    margin-top: 35px;
+
+    padding: 13px 38px;
+
+    background: transparent;
+
+    /* ROSA */
+    color: #b85c7a;
+
+    border: 1px solid #b85c7a;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 15px;
+
+    letter-spacing: 3px;
+
+    cursor: pointer;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition:
+        opacity 1.5s ease,
+        background 0.3s ease,
+        color 0.3s ease,
+        box-shadow 0.3s ease;
+
+}
+
+
+#continuar.visible {
+
+    opacity: 1;
+
+    pointer-events: auto;
+
+}
+
+
+#continuar:hover {
+
+    background: #b85c7a;
+
+    color: white;
+
+    box-shadow:
+        0 0 20px rgba(184, 92, 122, 0.40);
+
+}
+
+.linea {
+
+    width: 70px;
+
+    height: 1px;
+
+    /* ROSA */
+    background: #b85c7a;
+
+    margin-bottom: 25px;
+
+}
+
+#grano {
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    opacity: 0.055;
+
+    z-index: 10;
+
+    background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+
+}
+
+
+.borde {
+
+    position: absolute;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 35px;
+
+    /* ROSA OSCURO */
+    background: #8f3f5c;
+
+    z-index: 15;
+
+}
+
+
+.borde.superior {
+    top: 0;
+}
+
+
+.borde.inferior {
+    bottom: 0;
+}
+
+@media (max-width: 800px) {
+
+    #contenido {
+
+        flex-direction: column;
+
+        gap: 30px;
+
+        width: 90%;
+
+        overflow-y: auto;
+
+        padding: 60px 0;
+
+    }
+
+    #textoContainer,
+    #imagenContainer {
+
+        width: 100%;
+
+    }
+
+    #textoContainer {
+
+        text-align: center;
+
+    }
+
+    .linea {
+
+        margin-left: auto;
+        margin-right: auto;
+
+    }
+
+    #texto {
+
+        font-size: 23px;
+
+        min-height: 140px;
+
+    }
+
+    #imagenContainer img {
+
+        max-height: 40vh;
+
+    }
+
+}
+
+#escena.salir {
+
+    animation:
+        desaparecer 1.5s ease forwards;
+
+}
+
+
+@keyframes desaparecer {
+
+    to {
+
+        opacity: 0;
+
+        transform: scale(1.03);
+
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="escena">
+
+<div class="borde superior"></div>
+
+<div class="borde inferior"></div>
+
+<main id="contenido">
+
+    <section id="textoContainer">
+
+        <div id="escenaNumero">
+            ESCENA 01
+        </div>
+
+        <div class="linea"></div>
+
+        <p id="texto"></p>
+
+        <span id="cursor"></span>
+
+        <br>
+
+        <button id="continuar">
+            CONTINUAR
+        </button>
+
+    </section>
+
+    <section id="imagenContainer">
+
+        <img
+            src="imgs/A2.jpg"
+            alt="Imagen"
+        >
+
+    </section>
+
+
+</main>
+
+<div id="grano"></div>
+
+</div>
+
+<script>
+
+const textoElemento =
+    document.getElementById("texto");
+
+const cursor =
+    document.getElementById("cursor");
+
+const continuar =
+    document.getElementById("continuar");
+
+const escena =
+    document.getElementById("escena");
+
+const texto =
+    "Y así comenzó nuestra historia...";
+
+function escribirTexto(texto, velocidad = 75) {
+
+    let i = 0;
+
+    textoElemento.textContent = "";
+
+
+    function escribir() {
+
+        if (i < texto.length) {
+
+            textoElemento.textContent +=
+                texto.charAt(i);
+
+            i++;
+
+            setTimeout(
+                escribir,
+                velocidad
+            );
+
+        } else {
+
+            /* Quitar cursor */
+
+            cursor.style.display = "none";
+
+
+            /* Esperar antes del botón */
+
+            setTimeout(() => {
+
+                continuar.classList.add("visible");
+
+            }, 1000);
+
+        }
+
+    }
+
+
+    escribir();
+
+}
+
+setTimeout(() => {
+
+    escribirTexto(texto);
+
+}, 1800);
+
+continuar.addEventListener("click", () => {
+
+    escena.classList.add("salir");
+
+
+    setTimeout(() => {
+
+        window.location.href =
+            "A3.html";
+
+    }, 1500);
+
+});
+
+</script>
+
+</body>
+</html>
